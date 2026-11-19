@@ -3,102 +3,60 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Neon Coast Cover Studio: turn any photo and caption into a Vice City sunset poster — multi-panel layouts, neon colour grades, Anton + Pacifico lettering — and export a PNG to share. Runs fully offline; photos never leave your machine.">
-<title>Neon Coast — Cover Studio</title>
+<title>Sunset Strip — Cover Studio</title>
 <link rel="stylesheet" href="./fonts.css">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="brand">
-    <span class="brand-mark">NC</span>
-    <div>
-      <h1>Neon Coast <em>Cover Studio</em></h1>
-      <p>Turn any photo into a Vice City sunset poster. Photos never leave your machine.</p>
+<div id="shotWrap"><canvas id="shotCanvas" aria-label="Exported cover"></canvas></div>
+<main id="app" class="app">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">SS</span>
+      <div><h1>Sunset Strip</h1><p>Cover Studio &mdash; multi-panel poster maker</p></div>
     </div>
-  </div>
-  <div class="top-actions">
-    <button id="undoBtn" type="button" title="Undo (Ctrl+Z)">↩ Undo</button>
-    <button id="redoBtn" type="button" title="Redo (Ctrl+Shift+Z)">↪ Redo</button>
-    <label class="size-pick">Size
-      <select id="sizeSelect">
-        <option value="1080x1080">1080 × 1080 · Square</option>
-        <option value="1080x1350">1080 × 1350 · Portrait</option>
-        <option value="1920x1080">1920 × 1080 · Wide</option>
-      </select>
-    </label>
-    <button id="exportBtn" type="button" class="primary">⬇ Export PNG</button>
-  </div>
-</header>
-<main class="studio">
-  <section class="panel rail" aria-label="Cover controls">
-    <h2>1 · Photos</h2>
-    <p class="hint">Add up to three photos. Click a panel on the cover to pick which one it shows.</p>
-    <div class="photo-slots" id="photoSlots"></div>
-    <div class="sample-row">
-      <span>Try a sample:</span>
-      <button type="button" data-sample="boulevard">Boulevard</button>
-      <button type="button" data-sample="pier">Pier</button>
+    <div class="top-actions">
+      <button id="undoBtn" type="button" title="Undo">Undo</button>
+      <button id="redoBtn" type="button" title="Redo">Redo</button>
+      <button id="exportBtn" type="button" class="primary">Export PNG</button>
     </div>
-
-    <h2>2 · Layout</h2>
-    <div class="choice-grid" id="layoutGrid"></div>
-
-    <h2>3 · Colour grade</h2>
-    <div class="choice-grid" id="gradeGrid"></div>
-
-    <h2>4 · Lettering</h2>
-    <label class="field">Title
-      <input id="titleInput" type="text" maxlength="24" value="NEON COAST">
-    </label>
-    <label class="field">Script subtitle
-      <input id="subtitleInput" type="text" maxlength="40" value="chasing the sunset">
-    </label>
-    <label class="field">Tagline
-      <input id="taglineInput" type="text" maxlength="48" value="VICE CITY · EST. 2026">
-    </label>
+  </header>
+  <section class="workbench">
+    <aside class="panel controls" aria-label="Editor controls">
+      <h2>1 &middot; Photos</h2>
+      <label class="filebtn">Add photos<input id="photoInput" type="file" accept="image/*" multiple></label>
+      <div id="thumbRow" class="thumbs" aria-label="Loaded photos"></div>
+      <p class="hint">Click a panel on the cover, then drag it to pan. One photo fills all four panels with different crops.</p>
+      <h2>2 &middot; Panel <span id="selLabel">1</span></h2>
+      <label class="row">Photo in panel
+        <select id="panelPhoto"></select>
+      </label>
+      <label class="row">Zoom <input id="zoomSlider" type="range" min="100" max="300" value="120"><span id="zoomVal">1.2&times;</span></label>
+      <div class="row btns">
+        <button id="fitBtn" type="button">Fit</button>
+        <button id="centerBtn" type="button">Centre</button>
+        <button id="swapBtn" type="button">Swap photo</button>
+      </div>
+      <h2>3 &middot; Layout</h2>
+      <div id="layoutRow" class="picker" role="group" aria-label="Layout"></div>
+      <h2>4 &middot; Grade</h2>
+      <div id="gradeRow" class="picker" role="group" aria-label="Grade"></div>
+      <h2>5 &middot; Size</h2>
+      <div id="sizeRow" class="picker" role="group" aria-label="Export size"></div>
+      <h2>6 &middot; Lettering</h2>
+      <label class="row">Title <input id="titleInput" type="text" maxlength="28" value="SUNSET STRIP"></label>
+      <label class="row">Subtitle <input id="subtitleInput" type="text" maxlength="40" value="golden hour run"></label>
+      <label class="row">Tagline <input id="taglineInput" type="text" maxlength="40" value="GOLDEN HOUR &middot; EST. 2026"></label>
+      <label class="check"><input id="grainToggle" type="checkbox" checked> Film grain</label>
+      <label class="check"><input id="vignetteToggle" type="checkbox" checked> Vignette</label>
+      <p class="hint">Tip: a short title in capitals letters best &mdash; it shrinks to fit automatically.</p>
+      <p id="status" role="status">Sample photo loaded &mdash; drag a panel, then Export PNG.</p>
+    </aside>
+    <section class="preview" aria-label="Live preview">
+      <div class="canvas-holder"><canvas id="coverCanvas" aria-label="Cover preview"></canvas></div>
+      <p class="preview-note"><span id="sizeNote">1920 &times; 1080</span> &middot; live preview &mdash; export renders the exact pixel size.</p>
+    </section>
   </section>
-
-  <section class="panel stage" aria-label="Cover preview">
-    <div class="stage-head">
-      <span id="stageLabel">Live preview · 1080 × 1080</span>
-      <span class="hint">Drag a panel to pan · scroll to zoom · click to select</span>
-    </div>
-    <div class="canvas-wrap">
-      <canvas id="preview" width="1080" height="1080"></canvas>
-    </div>
-    <p id="status" role="status"></p>
-  </section>
-
-  <section class="panel rail" aria-label="Selected panel">
-    <h2>Selected panel</h2>
-    <p class="hint" id="selectedHint">Click any panel on the cover to adjust it.</p>
-    <label class="field">Photo in this panel
-      <select id="panelPhoto"></select>
-    </label>
-    <label class="field">Zoom <span id="zoomVal">100%</span>
-      <input id="zoomRange" type="range" min="100" max="300" value="100">
-    </label>
-    <label class="field">Pan left / right <span id="panXVal">0</span>
-      <input id="panXRange" type="range" min="-100" max="100" value="0">
-    </label>
-    <label class="field">Pan up / down <span id="panYVal">0</span>
-      <input id="panYRange" type="range" min="-100" max="100" value="0">
-    </label>
-    <div class="row-btns">
-      <button id="resetPanelBtn" type="button">Reset panel</button>
-      <button id="fillAllBtn" type="button">Fill all panels with this photo</button>
-    </div>
-    <div class="tips">
-      <h3>Three steps to a poster</h3>
-      <ol>
-        <li>Drop in a photo (or try a sample).</li>
-        <li>Pick a layout and a grade, write your title.</li>
-        <li>Export PNG in your post size and share it.</li>
-      </ol>
-      <p>Everything runs offline in this page. No upload, no watermark, no account.</p>
-    </div>
-  </section>
+  <footer class="foot">Offline &mdash; photos never leave your machine. Original art, no game logos or artwork.</footer>
 </main>
 <script type="module" src="./src/boot.js"></script>
 </body>

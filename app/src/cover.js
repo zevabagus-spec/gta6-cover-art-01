@@ -1,7 +1,7 @@
-// Neon Coast cover engine: draws a multi-panel GTA-poster-style cover on a 2D canvas.
-// Every function here is original work for this entry. No Rockstar logo, artwork or
-// font is used anywhere: the lettering is Anton and Pacifico, both SIL OFL fonts
-// shipped under app/fonts/.
+// Neon Coast cover engine: draws a multi-panel GTA-poster-style cover on a
+// 2D canvas. Everything here is original work for this entry. No Rockstar
+// logo, artwork or font is used anywhere: the lettering is Anton and Pacifico,
+// both SIL OFL fonts shipped under app/fonts/.
 
 /** The seven panel layouts the editor offers, keyed by id. */
 export const LAYOUTS = {
@@ -14,7 +14,7 @@ export const LAYOUTS = {
   strip: { name: 'Story Strip', panels: 4 },
 };
 
-/** The six colour grades, each a photo filter plus overlay washes. */
+/** The six colour grades: a canvas photo filter plus overlay wash colours. */
 export const GRADES = {
   sunset: { name: 'Vice Sunset', filter: 'saturate(1.35) contrast(1.08)', top: '#ff7a18', mid: '#ff2d78', bottom: '#7b2ff7' },
   neon: { name: 'Neon Nights', filter: 'saturate(1.55) contrast(1.12)', top: '#ff2ea6', mid: '#7b2ff7', bottom: '#00e5ff' },
@@ -50,7 +50,8 @@ export function layoutPanels(layout, w, h, titleH) {
     case 'nine': return grid(3, 3, area.x, area.y, area.w, area.h);
     case 'hero3': {
       const heroW = area.w * 0.62 - gap / 2;
-      const side = grid(1, 3, area.w - (area.w * 0.38 - gap / 2), area.y, area.w * 0.38 - gap / 2, area.h);
+      const sideW = area.w * 0.38 - gap / 2;
+      const side = grid(1, 3, area.w - sideW, area.y, sideW, area.h);
       return [{ x: area.x, y: area.y, w: heroW, h: area.h, rot: 0 }, ...side];
     }
     case 'four': return grid(2, 2, area.x, area.y, area.w, area.h);
@@ -106,7 +107,7 @@ export function applyGradeWash(ctx, rect, grade) {
   ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
 }
 
-/** A cached film-grain tile, generated once per page. */
+/** A cached film-grain tile, generated once per page load. */
 let grainTile = null;
 export function getGrainTile() {
   if (grainTile) return grainTile;
@@ -157,7 +158,7 @@ export function fitTitleFont(ctx, text, maxWidth, startSize, family, weight) {
 }
 
 /** Draws the halftone dot rows along the top of the title band. */
-export function drawHalftoneBand(ctx, x, y, w, bandH, grade) {
+export function drawHalftoneBand(ctx, x, y, w, grade) {
   const g = GRADES[grade] || GRADES.sunset;
   const cols = Math.floor(w / 26);
   for (let row = 0; row < 3; row++) {
@@ -179,13 +180,12 @@ export function drawHalftoneBand(ctx, x, y, w, bandH, grade) {
 /** Draws the title block: halftone band, gradient title, neon script subtitle. */
 export function drawTitleBlock(ctx, w, h, titleH, state) {
   const y0 = h - titleH;
-  const g = GRADES[state.grade] || GRADES.sunset;
   const band = ctx.createLinearGradient(0, y0, 0, h);
   band.addColorStop(0, '#241040');
   band.addColorStop(1, '#0d0518');
   ctx.fillStyle = band;
   ctx.fillRect(0, y0, w, titleH);
-  drawHalftoneBand(ctx, 0, y0, w, titleH, state.grade);
+  drawHalftoneBand(ctx, 0, y0, w, state.grade);
   const title = (state.title || 'NEON COAST').trim().toUpperCase() || 'NEON COAST';
   const base = Math.min(w * 0.115, titleH * 0.52) * (state.titleScale || 1);
   const size = fitTitleFont(ctx, title, w * 0.92, base, 'Anton, "Arial Black", sans-serif', '400');

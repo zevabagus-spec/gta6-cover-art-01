@@ -1,12 +1,12 @@
-// Cover state: the defaults, the undo/redo history, and the snapshot helpers.
-// State is plain JSON so a history entry is one JSON string; nothing here touches
-// the network or the disk.
+// Cover state for Neon Coast: the defaults, the undo/redo history, and the
+// small helpers the editor leans on. State is plain JSON, so one history entry
+// is one JSON string. Nothing here touches the network or the disk.
 
 import { LAYOUTS } from './cover.js';
 
-/** The nine panel slots (the largest layout uses all nine). */
+/** Nine panel slots — the biggest layout uses all nine. */
 export function defaultPanels() {
-  return Array.from({ length: 9 }, (_, i) => ({ photo: 0, zoom: 1, ox: 0, oy: 0 }));
+  return Array.from({ length: 9 }, () => ({ photo: 0, zoom: 1, ox: 0, oy: 0 }));
 }
 
 /** The state a fresh visitor starts with. */
@@ -27,7 +27,8 @@ export function defaultState() {
   };
 }
 
-/** Deep-copies a state object through JSON. */
+/** Deep-copies a state object through JSON (safe: state holds only numbers,
+strings, booleans and plain slot objects). */
 export function cloneState(state) {
   return JSON.parse(JSON.stringify(state));
 }
@@ -37,7 +38,7 @@ export function panelCount(state) {
   return (LAYOUTS[state.layout] || LAYOUTS.nine).panels;
 }
 
-/** Clamps the selected panel into the current layout's range. */
+/** Keeps the selection, heat and title scale inside their legal ranges. */
 export function clampSelection(state) {
   state.selected = Math.max(0, Math.min(panelCount(state) - 1, state.selected || 0));
   state.heat = Math.max(0, Math.min(5, state.heat || 0));
@@ -45,7 +46,7 @@ export function clampSelection(state) {
   return state;
 }
 
-/** A tiny undo/redo history over JSON snapshots of the state. */
+/** A small undo/redo history over JSON snapshots of the state. */
 export class CoverHistory {
   constructor(initial) {
     this.past = [];

@@ -1,6 +1,7 @@
 // Fixed scenes for screenshots: ?shot=editor shows the page with sample photos
-// loaded; ?shot=cover shows the cover alone at its export size. Query params:
-// layout, grade, size, title, subtitle, photo, photo2, heat.
+// loaded; ?shot=cover shows the cover alone at its export size, drawn by the
+// same drawCoverArt code the Export buttons use. Query params: layout, grade,
+// size, title, subtitle, photo, photo2, heat.
 // window.__shotReady is set once the cover is painted with fonts loaded.
 
 /** Waits until the display fonts are ready, then flags the shot done. */

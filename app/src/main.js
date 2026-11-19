@@ -92,7 +92,8 @@ export function renderTray() {
   });
 }
 
-/** Builds the layout and grade picker buttons. */
+/** Builds the layout, grade and size picker buttons, marking the current
+choice active in each group. */
 export function buildPickers() {
   const layouts = document.getElementById('layouts');
   Object.entries(LAYOUTS).forEach(([id, layout]) => {

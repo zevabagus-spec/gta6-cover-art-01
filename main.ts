@@ -1,8 +1,7 @@
-// Neon Coast — the entry program for gta6-cover-art-01 (Node 22, standard library
-// only). It hands the app in: it copies this repository's app/ and screenshots/
-// beside it into /output and writes /output/dossier.json, the summary the judge
-// reads, with the vendored make.fun library. Outside the grader's container,
-// MAKEFUN_OUTPUT_DIR stands in for /output:
+// Neon Coast — round 2 entry program for gta6-cover-art-01 (Node 22, stdlib only).
+// The program hands the app in: it copies this repository's app/ and screenshots/
+// into /output and writes /output/dossier.json with the vendored make.fun library.
+// Outside the grader, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
 import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -23,11 +22,12 @@ if (existsSync(join(here, 'screenshots'))) {
   cpSync(join(here, 'screenshots'), join(out, 'screenshots'), { recursive: true });
 }
 
-// The gate's own caps (reference/gate.json): only text_max_bytes shapes the bytes;
-// the rest refuse an entry the scorer would refuse (more than 4 screenshots or one
-// over 256 KiB; more than 993 files in app/ or 48 MiB of app files in all, or a
-// path under app/ over 1000 bytes; app/ counts beside /output's own 1000-entry cap
-// and its screenshots/ and dossier.json).
+// The gate's own caps (reference/gate.json): only text_max_bytes shapes the
+// dossier bytes; the rest refuse an entry the scorer would refuse outright
+// (more than 4 screenshots or one over 256 KiB; more than 993 files in app/ or
+// 48 MiB of app files in all, or a path under app/ over 1000 bytes; app/
+// counts beside /output's own 1000-entry cap and its screenshots/ and
+// dossier.json). Round 2 rebuild: same hand-in, fonts fetched fresh in-session.
 writeFileSync(
   join(out, 'dossier.json'),
   buildDossier(out, {

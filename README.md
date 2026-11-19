@@ -55,9 +55,11 @@ the app exported. The first by name is the cover.
 
 All art, lettering, and code here are original. No Rockstar Games logo,
 wordmark, artwork, character, or font is used. The display fonts are Anton and
-Pacifico, both under the SIL Open Font License, shipped under `app/fonts/` with
-their license texts. The two sample photos were made with an image model for
-make.fun and are free to use.
+Pacifico, both under the SIL Open Font License (OFL); the license is documented
+here rather than shipped as a separate text file. The font files themselves
+were downloaded fresh from the google/fonts repository inside this build
+session. The two sample photos were made with an image model for make.fun
+and are free to use.
 
 ## Referral
 

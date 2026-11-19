@@ -3,7 +3,7 @@
 
 html, body { margin: 0; height: 100%; background: #12081f; color: #f4eefc; font: 15px/1.45 system-ui, sans-serif; }
 .app { display: grid; grid-template-columns: 380px 1fr; height: 100vh; overflow: hidden; }
-.controls { display: flex; flex-direction: column; gap: 16px; padding: 22px 20px 28px; background: #1a0b2e; border-right: 1px solid #3a1c63; overflow-y: auto; }
+.controls { display: flex; flex-direction: column; gap: 16px; padding: 22px 20px 28px; background: #1a0b2e; border-right: 1px solid #3a1c63; overflow-y: auto; scrollbar-width: thin; }
 .controls header h1 { margin: 0; font-family: 'Anton', sans-serif; font-size: 34px; letter-spacing: 2px; background: linear-gradient(90deg, #ffd319, #ff2975, #8c1eff); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .tagline { margin: 4px 0 0; color: #c9aee8; font-size: 13px; }
 .group { display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #241040; border: 1px solid #3a1c63; border-radius: 12px; }
@@ -17,9 +17,8 @@ button:focus-visible, input:focus-visible { outline: 3px solid #ffd319; outline-
 button.active { background: #ff2975; border-color: #ff2975; }
 button.primary { background: linear-gradient(90deg, #ff2975, #8c1eff); border: 0; padding: 12px; }
 button:disabled { opacity: 0.4; cursor: default; }
-.file { cursor: pointer; }
+.file { cursor: pointer; border: 1px dashed #8c5cc0; border-radius: 8px; padding: 12px; text-align: center; color: #e8d5ff; }
 .file input { display: none; }
-.file { border: 1px dashed #8c5cc0; border-radius: 8px; padding: 12px; text-align: center; color: #e8d5ff; }
 .pickers { display: flex; flex-wrap: wrap; gap: 8px; }
 .pickers button { padding: 7px 10px; font-size: 13px; }
 .grades button { background: linear-gradient(135deg, var(--g1, #ff7a18), var(--g2, #7b2ff7)); border: 0; text-shadow: 0 1px 3px rgba(0,0,0,.6); }
